@@ -163,6 +163,8 @@ input{font:inherit;color:inherit}
 .arr-foot{display:flex;justify-content:flex-end;margin-top:8px}
 
 /* E: writing */
+.fill-s{font-family:var(--f-en);font-size:22px;line-height:2.1;margin-top:8px}
+.fill-in{display:inline-block;width:10em;max-width:100%;margin:0 6px;padding:4px 10px;min-height:44px;vertical-align:middle;text-align:center}
 .qa-q{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-family:var(--f-en);font-size:23px;font-weight:700;margin:2px 0 10px}
 .qa-hint{font-size:15px;color:var(--muted);margin:-4px 0 10px;padding:8px 10px;border-radius:10px;background:var(--chip)}
 .qa-hint .en{color:var(--ink)}
@@ -259,8 +261,9 @@ input{font:inherit;color:inherit}
         <tr><td><span class="letter">A</span>그림을 보고 보기에서 알맞은 단어 찾아 쓰기</td><td>10문제</td></tr>
         <tr><td><span class="letter">B</span>영어는 우리말로, 우리말은 영어로 쓰기</td><td>10문제</td></tr>
         <tr><td><span class="letter">C</span>빈칸을 채워 철자 완성하기</td><td>5문제</td></tr>
-        <tr><td><span class="letter">D</span>낱말을 순서대로 배열해 문장 완성하기</td><td>10문제</td></tr>
-        <tr><td><span class="letter">E</span>영어 질문에 배운 단어로 답 쓰기</td><td>2문제</td></tr>
+        <tr><td><span class="letter">D</span>낱말을 순서대로 배열해 문장 완성하기</td><td>5문제</td></tr>
+        <tr><td><span class="letter">E</span>보기에서 낱말을 골라 문장 완성하기</td><td>5문제</td></tr>
+        <tr><td><span class="letter">F</span>영어 질문에 배운 단어로 답 쓰기</td><td>2문제</td></tr>
       </tbody></table>
     </section>
   </main>
@@ -349,7 +352,7 @@ const VOCAB=[
 const W=Object.fromEntries(VOCAB.map(v=>[v.id,v]));
 const CATS=[['room','학교 장소'],['class','교실에서 하는 일'],['potato','감자 요리'],['sport','운동']];
 
-/* 문장 배열: 앞 60개는 1~6회에 고정 배치(회당 10개), 나머지는 랜덤 시험용 */
+/* 문장 배열: 앞 30개는 1~6회에 고정 배치(회당 5개), 나머지는 랜덤 시험용 */
 const SENTS=[
 {t:['please','open','the','book'],p:'.',ko:'책을 펼쳐 주세요.',ids:[13]},
 {t:["let's",'play','soccer'],p:'.',ko:'축구 하자.',ids:[33]},
@@ -419,6 +422,46 @@ const SENTS=[
 {t:['I','play','badminton','with','my','mom'],p:'.',ko:'나는 엄마와 배드민턴을 쳐.',ids:[35]}
 ];
 
+/* 보기 골라 문장 완성: ___ 자리에 a를 씀. 앞 30개는 1~6회에 고정 배치(회당 5개) */
+const FILLS=[
+{t:"Let's play ___.",a:'soccer',ko:'축구 하자.',id:33},
+{t:'I read books in the ___.',a:'library',ko:'나는 도서관에서 책을 읽어.',id:6},
+{t:'Please ___ the book.',a:'open',ko:'책을 펼쳐 주세요.',id:13},
+{t:'I eat lunch in the ___.',a:'cafeteria',ko:'나는 급식실에서 점심을 먹어.',id:9},
+{t:"Let's ___ the potatoes.",a:'wash',ko:'감자를 씻자.',id:21},
+{t:'I like ___.',a:'baseball',ko:'나는 야구를 좋아해.',id:29},
+{t:'Please ___ down.',a:'sit',ko:'앉아 주세요.',id:17},
+{t:'Look at the ___.',a:'board',ko:'칠판을 보세요.',id:15},
+{t:'I go to the ___ when I am sick.',a:"nurse's office",alt:['nurse office'],ko:'나는 아플 때 보건실에 가.',id:12},
+{t:'Can I ask a ___?',a:'question',ko:'질문해도 되나요?',id:19},
+{t:'We play basketball in the ___.',a:'gym',ko:'우리는 체육관에서 농구를 해.',id:11},
+{t:"Let's ___ the potatoes.",a:'boil',ko:'감자를 삶자.',id:27},
+{t:'Please ___ a hand.',a:'raise',ko:'손을 들어 주세요.',id:16},
+{t:'Do you like ___?',a:'ping-pong',ko:'너는 탁구를 좋아하니?',id:36},
+{t:'I draw pictures in the ___.',a:'artroom',ko:'나는 미술실에서 그림을 그려.',id:3},
+{t:'Please ___ the book.',a:'close',ko:'책을 덮어 주세요.',id:18},
+{t:"Let's ___ the book.",a:'share',ko:'책을 함께 보자.',id:20},
+{t:'I can play ___.',a:'badminton',ko:'나는 배드민턴을 칠 수 있어.',id:35},
+{t:"Let's ___ the potatoes.",a:'peel',ko:'감자 껍질을 벗기자.',id:22},
+{t:'Where is the ___?',a:'restroom',ko:'화장실은 어디에 있니?',id:4},
+{t:"Let's go ___.",a:'bowling',ko:'볼링 치러 가자.',id:38},
+{t:'I sing in the ___.',a:'musicroom',ko:'나는 음악실에서 노래해.',id:2},
+{t:"Let's ___ the potatoes.",a:'mash',ko:'감자를 으깨자.',id:28},
+{t:'Can you play ___?',a:'hockey',ko:'너는 하키를 할 수 있니?',id:34},
+{t:'Meet me at the school ___.',a:'gate',ko:'교문에서 만나.',id:7},
+{t:"Let's play ___ in the gym.",a:'dodge ball',ko:'체육관에서 피구 하자.',id:32},
+{t:'My dad plays ___.',a:'golf',ko:'우리 아빠는 골프를 쳐.',id:37},
+{t:"Let's ___ the potatoes.",a:'fry',ko:'감자를 튀기자.',id:24},
+{t:'We run in the school ___.',a:'yard',ko:'우리는 운동장에서 달려.',id:8},
+{t:'I ___ the book in the library.',a:'read',ko:'나는 도서관에서 책을 읽어.',id:14},
+{t:'My sister likes ___.',a:'volleyball',ko:'우리 언니는 배구를 좋아해.',id:31},
+{t:"Let's ___ the potatoes.",a:'cut',ko:'감자를 썰자.',id:25},
+{t:'Can you play ___?',a:'billiards',ko:'너는 당구를 칠 수 있니?',id:39},
+{t:"Let's play ___.",a:'frisbee',ko:'원반던지기 하자.',id:40},
+{t:'This is my ___.',a:'classroom',ko:'여기는 우리 교실이야.',id:1},
+{t:"Let's ___ the potatoes.",a:'bake',ko:'감자를 오븐에 굽자.',id:23}
+];
+const fillOK=(f,ans)=>!!key(ans)&&[f.a,...(f.alt||[])].map(key).includes(key(ans));
 /* 영작: need = 모두 만족해야 하는 낱말 묶음(묶음 안에서는 하나만 있으면 됨). 앞 12개는 1~6회에 고정 배치 */
 const key=s=>String(s).toLowerCase().replace(/[^a-z]/g,'');
 const SPORTK=VOCAB.filter(v=>v.cat==='sport').flatMap(v=>[v.en,...(v.alt||[])].map(key));
@@ -438,7 +481,7 @@ const QAS=[
 {q:'Where do you run and play at school?',ko:'학교에서 어디에서 뛰어노니?',frame:'I run and play in the ______.',model:'I run and play in the school yard.',need:[['schoolyard']],ids:[8]}
 ];
 
-const SECS=[['A','그림 보고 쓰기',10],['B','뜻 쓰기',10],['C','철자 완성',5],['D','문장 배열',10],['E','영작하기',2]];
+const SECS=[['A','그림 보고 쓰기',10],['B','뜻 쓰기',10],['C','철자 완성',5],['D','문장 배열',5],['E','보기 골라 문장 완성',5],['F','영작하기',2]];
 const TOTAL=SECS.reduce((s,x)=>s+x[2],0);
 
 /* ---------- 도구 ---------- */
@@ -495,13 +538,15 @@ function buildExam(seed,idx,usage){
   const bank=shuffle(A,rng);
   const B=pickN(VOCAB,10,rng,used,usage,false).map((v,i)=>({v,dir:i<5?'ek':'ke'}));
   const C=pickN(VOCAB,5,rng,used,usage,false).map(v=>({v,blanks:makeBlanks(v,rng)}));
-  const sIdx=idx!=null?[0,1,2,3,4,5,6,7,8,9].map(k=>idx+k*6):shuffle(SENTS.map((_,i)=>i),rng).slice(0,10);
+  const sIdx=idx!=null?[0,1,2,3,4].map(k=>idx+k*6):shuffle(SENTS.map((_,i)=>i),rng).slice(0,5);
   const D=sIdx.map(si=>({si,order:scramble(SENTS[si].t.length,rng)}));
-  const E=idx!=null?[idx,idx+6]:shuffle(QAS.map((_,i)=>i),rng).slice(0,2);
-  return {key:idx!=null?'e'+(idx+1):'r',title:idx!=null?`${idx+1}회 모의고사`:'랜덤 모의고사',seed,A,bank,B,C,D,E};
+  const E=idx!=null?[0,1,2,3,4].map(k=>idx+k*6):shuffle(FILLS.map((_,i)=>i),rng).slice(0,5);
+  const ebank=shuffle(E,rng);
+  const F=idx!=null?[idx,idx+6]:shuffle(QAS.map((_,i)=>i),rng).slice(0,2);
+  return {key:idx!=null?'e'+(idx+1):'r',title:idx!=null?`${idx+1}회 모의고사`:'랜덤 모의고사',seed,A,bank,B,C,D,E,ebank,F};
 }
 const FIXED=(()=>{const usage={};return [0,1,2,3,4,5].map(i=>buildExam(20261021+i*7919,i,usage))})();
-const freshAns=ex=>({A:ex.A.map(()=>''),B:ex.B.map(()=>''),C:ex.C.map(c=>c.blanks.map(()=>'')),D:ex.D.map(()=>[]),E:ex.E.map(()=>'')});
+const freshAns=ex=>({A:ex.A.map(()=>''),B:ex.B.map(()=>''),C:ex.C.map(c=>c.blanks.map(()=>'')),D:ex.D.map(()=>[]),E:ex.E.map(()=>''),F:ex.F.map(()=>'')});
 
 /* ---------- 화면 전환 ---------- */
 const VIEWS=['home','exam','result','review','words'];
@@ -533,7 +578,7 @@ function startExam(ex){
   ST.exam=ex;ST.graded=null;
   const d=S.get('draft:'+ex.key+':'+ex.seed,null);
   const f=freshAns(ex);
-  ST.ans=d&&d.A&&d.A.length===f.A.length&&d.D&&d.D.length===f.D.length?d:f;
+  ST.ans=d&&d.A&&d.A.length===f.A.length&&d.D&&d.D.length===f.D.length&&d.F?d:f;
   renderExam();show('exam');
 }
 const saveDraft=()=>{if(!ST.graded)S.set('draft:'+ST.exam.key+':'+ST.exam.seed,ST.ans)};
@@ -556,7 +601,7 @@ function renderExam(){
   $('#xTitle').textContent=ex.title+(g?' · 채점 완료':'');
   // A
   h+='<section>'+secHead('A','그림을 보고 [보기]에서 알맞은 말을 찾아 쓰세요.','1~10번');
-  h+=`<div class="bank" aria-label="보기"><span class="bank-label">보기</span>${ex.bank.map(v=>`<span class="bank-word" data-k="${key(v.en)}">${esc(v.en)}</span>`).join('')}</div><div class="pic-grid">`;
+  h+=`<div class="bank" data-bank="A" aria-label="보기"><span class="bank-label">보기</span>${ex.bank.map(v=>`<span class="bank-word" data-k="${key(v.en)}">${esc(v.en)}</span>`).join('')}</div><div class="pic-grid">`;
   ex.A.forEach((v,i)=>{n++;h+=`<div class="q${qCls(n)}" id="q${n}">${markHTML(n)}<span class="qn">${n}</span><div class="pic" role="img" aria-label="그림 ${n}">${v.pic}</div><input class="field en" id="a-A-${i}" data-sec="A" data-i="${i}" ${EN_ATTR} placeholder="영어로 쓰기" value="${esc(a.A[i])}"${dis}>${fixHTML(n)}</div>`});
   h+='</div></section>';
   // B
@@ -578,17 +623,24 @@ function renderExam(){
     h+=`<div class="q spell${qCls(n)}" id="q${n}">${markHTML(n)}<span class="qn">${n}</span><div class="meta">${v.pic?`<span class="pp" aria-hidden="true">${v.pic}</span>`:''}<span class="ko">${esc(v.ko)}</span></div><div class="tiles">${t}</div>${fixHTML(n)}</div>`});
   h+='</div></section>';
   // D
-  h+='<section>'+secHead('D','낱말 카드를 순서대로 눌러 문장을 완성하세요.','26~35번 · 잘못 눌렀으면 위의 카드를 눌러 빼요')+'<div class="rows">';
+  h+='<section>'+secHead('D','낱말 카드를 순서대로 눌러 문장을 완성하세요.','26~30번 · 잘못 눌렀으면 위의 카드를 눌러 빼요')+'<div class="rows">';
   ex.D.forEach((d,i)=>{n++;const s=SENTS[d.si];
     h+=`<div class="q${qCls(n)}" id="q${n}">${markHTML(n)}<div class="arr-ko"><span class="qn">${n}</span>${esc(s.ko)}</div><div id="arr-D${i}">${arrHTML('D'+i,s,d.order,a.D[i],!!g)}</div>${g?'':`<div class="arr-foot"><button type="button" class="mini" data-reset="${i}">처음부터 다시</button></div>`}${fixHTML(n)}</div>`});
   h+='</div></section>';
   // E
-  h+='<section>'+secHead('E','영어 질문을 읽고, 배운 단어를 넣어 영어 문장으로 답하세요.','36~37번 · 배운 단어가 들어간 문장이면 정답')+'<div class="rows">';
-  ex.E.forEach((qi,i)=>{n++;const q=QAS[qi];
+  h+='<section>'+secHead('E','[보기]에서 알맞은 낱말을 골라 문장을 완성하세요.','31~35번 · 빈칸에 보기의 낱말을 써요')+'<div class="rows">';
+  h+=`<div class="bank" data-bank="E" aria-label="보기"><span class="bank-label">보기</span>${ex.ebank.map(fi=>`<span class="bank-word" data-k="${key(FILLS[fi].a)}">${esc(FILLS[fi].a)}</span>`).join('')}</div>`;
+  ex.E.forEach((fi,i)=>{n++;const f=FILLS[fi],[pre,post]=f.t.split('___');
+    h+=`<div class="q${qCls(n)}" id="q${n}">${markHTML(n)}<div class="arr-ko"><span class="qn">${n}</span>${esc(f.ko)}</div>
+      <div class="fill-s">${esc(pre)}<input class="field en fill-in" id="a-E-${i}" data-sec="E" data-i="${i}" ${EN_ATTR} aria-label="${n}번 빈칸" value="${esc(a.E[i])}"${dis}>${esc(post)}</div>${fixHTML(n)}</div>`});
+  h+='</div></section>';
+  // F
+  h+='<section>'+secHead('F','영어 질문을 읽고, 배운 단어를 넣어 영어 문장으로 답하세요.','36~37번 · 배운 단어가 들어간 문장이면 정답')+'<div class="rows">';
+  ex.F.forEach((qi,i)=>{n++;const q=QAS[qi];
     h+=`<div class="q${qCls(n)}" id="q${n}">${markHTML(n)}<div class="qa-top"><span class="qn">${n}</span>${g?'':`<button type="button" class="mini" data-hint="${i}">힌트 보기</button>`}</div>
       <div class="qa-q">${esc(q.q)} ${spk(q.q)}</div>
       <div class="qa-hint" id="hint${i}"${g?'':' hidden'}>뜻: ${esc(q.ko)}<br>이렇게 시작해 봐요: <span class="en">${esc(q.frame)}</span></div>
-      <input class="field en" id="a-E-${i}" data-sec="E" data-i="${i}" ${EN_ATTR.replace('autocapitalize="off"','autocapitalize="sentences"')} placeholder="영어 문장으로 답 쓰기" value="${esc(a.E[i])}"${dis}>${fixHTML(n)}</div>`});
+      <input class="field en" id="a-F-${i}" data-sec="F" data-i="${i}" ${EN_ATTR.replace('autocapitalize="off"','autocapitalize="sentences"')} placeholder="영어 문장으로 답 쓰기" value="${esc(a.F[i])}"${dis}>${fixHTML(n)}</div>`});
   h+='</div></section>';
   // submit
   h+=g?`<div class="submit-zone"><p><b>${g.correct} / ${TOTAL}</b> 맞았어요 · ${g.score}점</p><div class="row-btns"><button type="button" class="btn" data-go="result">결과 보기</button><button type="button" class="btn alt" data-retry="1">다시 풀기</button></div></div>`
@@ -602,15 +654,16 @@ function answeredCount(){
   c+=a.A.filter(x=>x.trim()).length;c+=a.B.filter(x=>x.trim()).length;
   c+=a.C.filter(x=>x.every(y=>y)).length;
   c+=a.D.filter((x,i)=>x.length===SENTS[ST.exam.D[i].si].t.length).length;
-  c+=a.E.filter(x=>x.trim()).length;return c;
+  c+=a.E.filter(x=>x.trim()).length;c+=a.F.filter(x=>x.trim()).length;return c;
 }
 function updateProg(){
   if(ST.graded){$('#xProg').textContent=`${ST.graded.correct} / ${TOTAL} 맞음`;$('#xBar').style.width=(ST.graded.correct/TOTAL*100)+'%';return}
   const c=answeredCount();$('#xProg').textContent=`${c} / ${TOTAL} 풀었어요`;$('#xBar').style.width=(c/TOTAL*100)+'%';
 }
 function updateBankStrike(){
-  const typed=new Set(ST.ans.A.map(key));
-  document.querySelectorAll('#xBody .bank-word').forEach(el=>el.classList.toggle('used',typed.has(el.dataset.k)));
+  document.querySelectorAll('#xBody .bank').forEach(b=>{
+    const typed=new Set(ST.ans[b.dataset.bank].map(key));
+    b.querySelectorAll('.bank-word').forEach(el=>el.classList.toggle('used',typed.has(el.dataset.k)))});
 }
 
 /* ---------- 채점 ---------- */
@@ -629,8 +682,10 @@ function grade(){
     items.push({sec:'C',ok,mine:a.C[i].some(x=>x)?mine:'',en:true,prompt:v.ko,ansHTML:`<span class="en">${full}</span>`,ids:[v.id]})});
   ex.D.forEach((d,i)=>{const s=SENTS[d.si];const got=a.D[i].map(p=>s.t[d.order[p]]);const ok=got.join(' ')===s.t.join(' ');
     items.push({sec:'D',ok,mine:got.length?cap(got.join(' '))+s.p:'',en:true,prompt:s.ko,ansHTML:`<span class="en">${esc(sentText(s))}</span>`,si:d.si,ids:s.ids})});
-  ex.E.forEach((qi,i)=>{const q=QAS[qi];
-    items.push({sec:'E',ok:gradeQA(q,a.E[i]),mine:a.E[i],en:true,prompt:q.q,promptEn:true,ansHTML:`<span class="en">${esc(q.model)}</span> (배운 단어를 넣어 문장으로 쓰면 정답)`,ids:q.ids})});
+  ex.E.forEach((fi,i)=>{const f=FILLS[fi];
+    items.push({sec:'E',ok:fillOK(f,a.E[i]),mine:a.E[i],en:true,prompt:f.t.replace('___','(    )'),promptEn:true,ansHTML:`<span class="en">${esc(f.t).replace('___',`<u>${esc(f.a)}</u>`)}</span>`,ids:[f.id]})});
+  ex.F.forEach((qi,i)=>{const q=QAS[qi];
+    items.push({sec:'F',ok:gradeQA(q,a.F[i]),mine:a.F[i],en:true,prompt:q.q,promptEn:true,ansHTML:`<span class="en">${esc(q.model)}</span> (배운 단어를 넣어 문장으로 쓰면 정답)`,ids:q.ids})});
   const correct=items.filter(x=>x.ok).length,score=Math.round(correct/TOTAL*100);
   ST.graded={items,correct,score};
   // 기록
@@ -783,6 +838,7 @@ function firstEmpty(){
   for(const x of a.C){n++;if(!x.every(y=>y))return $('#q'+n)}
   for(let i=0;i<a.D.length;i++){n++;if(a.D[i].length<SENTS[ST.exam.D[i].si].t.length)return $('#q'+n)}
   for(const x of a.E){n++;if(!x.trim())return $('#q'+n)}
+  for(const x of a.F){n++;if(!x.trim())return $('#q'+n)}
   return null;
 }
 $('#xBody').addEventListener('input',e=>{
