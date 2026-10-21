@@ -254,12 +254,12 @@ input{font:inherit;color:inherit}
       <div class="tools" id="tools"></div>
     </section>
     <section>
-      <h2 class="h2">시험 구성 · 32문제</h2>
+      <h2 class="h2">시험 구성 · 37문제</h2>
       <table class="plan"><tbody>
         <tr><td><span class="letter">A</span>그림을 보고 보기에서 알맞은 단어 찾아 쓰기</td><td>10문제</td></tr>
         <tr><td><span class="letter">B</span>영어는 우리말로, 우리말은 영어로 쓰기</td><td>10문제</td></tr>
         <tr><td><span class="letter">C</span>빈칸을 채워 철자 완성하기</td><td>5문제</td></tr>
-        <tr><td><span class="letter">D</span>낱말을 순서대로 배열해 문장 완성하기</td><td>5문제</td></tr>
+        <tr><td><span class="letter">D</span>낱말을 순서대로 배열해 문장 완성하기</td><td>10문제</td></tr>
         <tr><td><span class="letter">E</span>영어 질문에 배운 단어로 답 쓰기</td><td>2문제</td></tr>
       </tbody></table>
     </section>
@@ -349,7 +349,7 @@ const VOCAB=[
 const W=Object.fromEntries(VOCAB.map(v=>[v.id,v]));
 const CATS=[['room','학교 장소'],['class','교실에서 하는 일'],['potato','감자 요리'],['sport','운동']];
 
-/* 문장 배열: 앞 30개는 1~6회에 고정 배치, 나머지는 랜덤 시험용 */
+/* 문장 배열: 앞 60개는 1~6회에 고정 배치(회당 10개), 나머지는 랜덤 시험용 */
 const SENTS=[
 {t:['please','open','the','book'],p:'.',ko:'책을 펼쳐 주세요.',ids:[13]},
 {t:["let's",'play','soccer'],p:'.',ko:'축구 하자.',ids:[33]},
@@ -386,7 +386,37 @@ const SENTS=[
 {t:["let's",'go','to','the','computer room'],p:'.',ko:'컴퓨터실에 가자.',ids:[5]},
 {t:['I','draw','in','the','artroom'],p:'.',ko:'나는 미술실에서 그림을 그려.',ids:[3]},
 {t:["let's",'cut','the','potatoes'],p:'.',ko:'감자를 썰자.',ids:[25]},
-{t:['mom','bakes','the','potatoes'],p:'.',ko:'엄마가 감자를 오븐에 구워요.',ids:[23]}
+{t:['mom','bakes','the','potatoes'],p:'.',ko:'엄마가 감자를 오븐에 구워요.',ids:[23]},
+{t:['I','wash','the','potatoes'],p:'.',ko:'나는 감자를 씻어.',ids:[21]},
+{t:['please','look','at','the','board'],p:'.',ko:'칠판을 봐 주세요.',ids:[15]},
+{t:['where','is','the','gym'],p:'?',ko:'체육관은 어디에 있니?',ids:[11]},
+{t:["let's",'play','baseball'],p:'.',ko:'야구 하자.',ids:[29]},
+{t:['I','can','ask','a','question'],p:'.',ko:'나는 질문을 할 수 있어.',ids:[19]},
+{t:['this','is','the','library'],p:'.',ko:'여기는 도서관이야.',ids:[6]},
+{t:["let's",'grill','the','potatoes'],p:'.',ko:'감자를 석쇠에 굽자.',ids:[26]},
+{t:['do','you','like','golf'],p:'?',ko:'너는 골프를 좋아하니?',ids:[37]},
+{t:['I','eat','lunch','in','the','cafeteria'],p:'.',ko:'나는 급식실에서 점심을 먹어.',ids:[9]},
+{t:['can','you','play','volleyball'],p:'?',ko:'너는 배구를 할 수 있니?',ids:[31]},
+{t:['please','share','the','book'],p:'.',ko:'책을 함께 봐 주세요.',ids:[20]},
+{t:['where','is','the',"nurse's office"],p:'?',ko:'보건실은 어디에 있니?',ids:[12]},
+{t:['I','like','ping-pong'],p:'.',ko:'나는 탁구를 좋아해.',ids:[36]},
+{t:["let's",'bake','the','potatoes'],p:'.',ko:'감자를 오븐에 굽자.',ids:[23]},
+{t:['we','play','soccer','in','the','school yard'],p:'.',ko:'우리는 운동장에서 축구를 해.',ids:[33,8]},
+{t:['I','sit','down','in','the','classroom'],p:'.',ko:'나는 교실에서 앉아.',ids:[17,1]},
+{t:['my','brother','likes','hockey'],p:'.',ko:'우리 형은 하키를 좋아해.',ids:[34]},
+{t:['do','you','like','bowling'],p:'?',ko:'너는 볼링을 좋아하니?',ids:[38]},
+{t:['where','is','the','office'],p:'?',ko:'교무실은 어디에 있니?',ids:[10]},
+{t:['I','sing','in','the','musicroom'],p:'.',ko:'나는 음악실에서 노래해.',ids:[2]},
+{t:["let's",'play','billiards'],p:'.',ko:'당구 치자.',ids:[39]},
+{t:['dad','cuts','the','potatoes'],p:'.',ko:'아빠가 감자를 썰어요.',ids:[25]},
+{t:['I','can','play','dodge ball'],p:'.',ko:'나는 피구를 할 수 있어.',ids:[32]},
+{t:['please','read','the','book'],p:'.',ko:'책을 읽어 주세요.',ids:[14]},
+{t:['where','is','the','computer room'],p:'?',ko:'컴퓨터실은 어디에 있니?',ids:[5]},
+{t:['I','raise','my','hand'],p:'.',ko:'나는 손을 들어.',ids:[16]},
+{t:['do','you','like','frisbee'],p:'?',ko:'너는 원반던지기를 좋아하니?',ids:[40]},
+{t:['grandma','boils','the','potatoes'],p:'.',ko:'할머니가 감자를 삶아요.',ids:[27]},
+{t:['this','is','the','artroom'],p:'.',ko:'여기는 미술실이야.',ids:[3]},
+{t:['I','play','badminton','with','my','mom'],p:'.',ko:'나는 엄마와 배드민턴을 쳐.',ids:[35]}
 ];
 
 /* 영작: need = 모두 만족해야 하는 낱말 묶음(묶음 안에서는 하나만 있으면 됨). 앞 12개는 1~6회에 고정 배치 */
@@ -408,7 +438,7 @@ const QAS=[
 {q:'Where do you run and play at school?',ko:'학교에서 어디에서 뛰어노니?',frame:'I run and play in the ______.',model:'I run and play in the school yard.',need:[['schoolyard']],ids:[8]}
 ];
 
-const SECS=[['A','그림 보고 쓰기',10],['B','뜻 쓰기',10],['C','철자 완성',5],['D','문장 배열',5],['E','영작하기',2]];
+const SECS=[['A','그림 보고 쓰기',10],['B','뜻 쓰기',10],['C','철자 완성',5],['D','문장 배열',10],['E','영작하기',2]];
 const TOTAL=SECS.reduce((s,x)=>s+x[2],0);
 
 /* ---------- 도구 ---------- */
@@ -465,7 +495,7 @@ function buildExam(seed,idx,usage){
   const bank=shuffle(A,rng);
   const B=pickN(VOCAB,10,rng,used,usage,false).map((v,i)=>({v,dir:i<5?'ek':'ke'}));
   const C=pickN(VOCAB,5,rng,used,usage,false).map(v=>({v,blanks:makeBlanks(v,rng)}));
-  const sIdx=idx!=null?[0,1,2,3,4].map(k=>idx+k*6):shuffle(SENTS.map((_,i)=>i),rng).slice(0,5);
+  const sIdx=idx!=null?[0,1,2,3,4,5,6,7,8,9].map(k=>idx+k*6):shuffle(SENTS.map((_,i)=>i),rng).slice(0,10);
   const D=sIdx.map(si=>({si,order:scramble(SENTS[si].t.length,rng)}));
   const E=idx!=null?[idx,idx+6]:shuffle(QAS.map((_,i)=>i),rng).slice(0,2);
   return {key:idx!=null?'e'+(idx+1):'r',title:idx!=null?`${idx+1}회 모의고사`:'랜덤 모의고사',seed,A,bank,B,C,D,E};
@@ -503,7 +533,7 @@ function startExam(ex){
   ST.exam=ex;ST.graded=null;
   const d=S.get('draft:'+ex.key+':'+ex.seed,null);
   const f=freshAns(ex);
-  ST.ans=d&&d.A&&d.A.length===f.A.length?d:f;
+  ST.ans=d&&d.A&&d.A.length===f.A.length&&d.D&&d.D.length===f.D.length?d:f;
   renderExam();show('exam');
 }
 const saveDraft=()=>{if(!ST.graded)S.set('draft:'+ST.exam.key+':'+ST.exam.seed,ST.ans)};
@@ -548,12 +578,12 @@ function renderExam(){
     h+=`<div class="q spell${qCls(n)}" id="q${n}">${markHTML(n)}<span class="qn">${n}</span><div class="meta">${v.pic?`<span class="pp" aria-hidden="true">${v.pic}</span>`:''}<span class="ko">${esc(v.ko)}</span></div><div class="tiles">${t}</div>${fixHTML(n)}</div>`});
   h+='</div></section>';
   // D
-  h+='<section>'+secHead('D','낱말 카드를 순서대로 눌러 문장을 완성하세요.','26~30번 · 잘못 눌렀으면 위의 카드를 눌러 빼요')+'<div class="rows">';
+  h+='<section>'+secHead('D','낱말 카드를 순서대로 눌러 문장을 완성하세요.','26~35번 · 잘못 눌렀으면 위의 카드를 눌러 빼요')+'<div class="rows">';
   ex.D.forEach((d,i)=>{n++;const s=SENTS[d.si];
     h+=`<div class="q${qCls(n)}" id="q${n}">${markHTML(n)}<div class="arr-ko"><span class="qn">${n}</span>${esc(s.ko)}</div><div id="arr-D${i}">${arrHTML('D'+i,s,d.order,a.D[i],!!g)}</div>${g?'':`<div class="arr-foot"><button type="button" class="mini" data-reset="${i}">처음부터 다시</button></div>`}${fixHTML(n)}</div>`});
   h+='</div></section>';
   // E
-  h+='<section>'+secHead('E','영어 질문을 읽고, 배운 단어를 넣어 영어 문장으로 답하세요.','31~32번 · 배운 단어가 들어간 문장이면 정답')+'<div class="rows">';
+  h+='<section>'+secHead('E','영어 질문을 읽고, 배운 단어를 넣어 영어 문장으로 답하세요.','36~37번 · 배운 단어가 들어간 문장이면 정답')+'<div class="rows">';
   ex.E.forEach((qi,i)=>{n++;const q=QAS[qi];
     h+=`<div class="q${qCls(n)}" id="q${n}">${markHTML(n)}<div class="qa-top"><span class="qn">${n}</span>${g?'':`<button type="button" class="mini" data-hint="${i}">힌트 보기</button>`}</div>
       <div class="qa-q">${esc(q.q)} ${spk(q.q)}</div>
